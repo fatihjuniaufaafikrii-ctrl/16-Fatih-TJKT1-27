@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VARIABEL - FATIH</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --ai-primary: #00d2ff;
+    --ai-secondary: #3a7bd5;
+    --ai-accent: #ff00d4;
+    --glass-bg: rgba(15, 20, 30, 0.65);
+    --text-main: #f8f9fa;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #030508;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+    position: relative;
+    padding: 40px 20px;
+}
+
+/* =========================================
+   BACKGROUND ANIMATION: TECH GRID & AURORA 
+   ========================================= */
+.bg-grid {
+    position: fixed;
+    inset: -50px;
+    background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    z-index: -2;
+    animation: panGrid 20s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes panGrid {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-40px); }
+}
+
+.ambient-glow {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.4;
+    mix-blend-mode: screen;
+}
+
+.glow-1 {
+    width: 40vw; height: 40vw;
+    background: rgba(0, 210, 255, 0.3);
+    top: -10%; left: -10%;
+    animation: drift1 20s infinite alternate ease-in-out;
+}
+
+.glow-2 {
+    width: 45vw; height: 45vw;
+    background: rgba(58, 123, 213, 0.2);
+    bottom: -10%; right: -10%;
+    animation: drift2 25s infinite alternate-reverse ease-in-out;
+}
+
+.glow-3 {
+    width: 35vw; height: 35vw;
+    background: rgba(122, 0, 255, 0.15);
+    top: 40%; left: 30%;
+    animation: drift3 30s infinite alternate ease-in-out;
+}
+
+@keyframes drift1 { 100% { transform: translate(10vw, 10vh) scale(1.1); } }
+@keyframes drift2 { 100% { transform: translate(-10vw, -10vh) scale(1.05); } }
+@keyframes drift3 { 100% { transform: translate(15vw, -15vh) scale(1.15); } }
+
+/* =========================================
+   UI CARD & CONTENT 
+   ========================================= */
+.card {
+    width: 100%;
+    max-width: 1000px;
+    padding: 50px;
+    border-radius: 30px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6), inset 0 2px 20px rgba(255,255,255,0.03);
+    
+    animation: 
+        cardEnter 1.2s ease-out forwards,
+        magneticFloat 7s ease-in-out infinite alternate;
+}
+
+@keyframes cardEnter {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes magneticFloat {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-8px); }
+}
+
+h1 {
+    font-family: 'Orbitron', sans-serif;
+    text-align: center;
+    font-size: clamp(28px, 5vw, 42px);
+    letter-spacing: 4px;
+    margin-bottom: 40px;
+    background: linear-gradient(to right, var(--ai-primary) 20%, #ffffff 40%, #ffffff 60%, var(--ai-primary) 80%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: textShine 5s linear infinite;
+}
+
+@keyframes textShine {
+    to { background-position: 200% center; }
+}
+
+/* GRID SYSTEM */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 35px;
+}
+
+.item {
+    padding: 22px 25px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    
+    /* Animasi Staggered Entrance */
+    opacity: 0;
+    transform: translateY(20px);
+    animation: itemCascade 0.6s forwards;
+}
+
+/* Delay animasi untuk setiap item agar muncul berurutan */
+.item:nth-child(1) { animation-delay: 0.1s; }
+.item:nth-child(2) { animation-delay: 0.2s; }
+.item:nth-child(3) { animation-delay: 0.3s; }
+.item:nth-child(4) { animation-delay: 0.4s; }
+.item:nth-child(5) { animation-delay: 0.5s; }
+.item:nth-child(6) { animation-delay: 0.6s; }
+.item:nth-child(7) { animation-delay: 0.7s; }
+.item:nth-child(8) { animation-delay: 0.8s; }
+.item:nth-child(9) { animation-delay: 0.9s; }
+.item:nth-child(10) { animation-delay: 1.0s; }
+.item:nth-child(11) { animation-delay: 1.1s; }
+.item:nth-child(12) { animation-delay: 1.2s; }
+
+@keyframes itemCascade {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.item:hover {
+    background: rgba(0, 210, 255, 0.05);
+    border-color: rgba(0, 210, 255, 0.3);
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 10px 25px rgba(0, 210, 255, 0.1);
+}
+
+.label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--ai-primary);
+    font-weight: 700;
+    margin-bottom: 8px;
+    opacity: 0.9;
+}
+
+.value {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #e2e8f0;
+    font-weight: 400;
+}
+
+/* LINK & BUTTONS */
+a {
+    color: var(--ai-primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+a:hover {
+    color: #fff;
+    text-shadow: 0 0 10px var(--ai-primary);
+}
+
+.back-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #94a3b8;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: 0.3s;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.back-btn:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--ai-primary);
+    transform: translateX(-5px);
+    text-shadow: none;
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.2);
+}
+
+footer {
+    margin-top: 40px;
+    padding-top: 25px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    text-align: center;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    color: #64748b;
+    text-transform: uppercase;
+}
+
+@media(max-width: 768px) {
+    .card { padding: 30px 20px; }
+    .grid { grid-template-columns: 1fr; }
+    body { padding: 20px 10px; }
+}
+
+/* Menyembunyikan output document.write yang berantakan di luar card */
+head p { display: none; } 
+</style>
+
+<script>
+    /* LOGIKA ASLI - TIDAK ADA YANG DIUBAH */
+    var nama = prompt("Karena kamu memilih ke smkn1 purwokerto, maka sebutkan namamu", "");
+        document.write("<p>Hello "+ nama +"</p>");
+        var yakin = confirm("Apakah kamu yakin akan mengunjungi website sekolah saya?");
+
+        if (yakin) {
+            window.location = "https://smkn1purwokerto.sch.id/";
+        } else {
+            document.write("<div style='text-align:center; position:absolute; top:10px; width:100%; color:#64748b; font-family:sans-serif; font-size:12px; z-index:100;'>Baiklah, Anda Disini saja yaa</div>");
+        }
+var data = {
+    sekolah: "SMK N 1 PURWOKERTO",
+    alamat: "Jl. Dr. Soeparno No.29, Purwokerto Timur, Banyumas",
+    jurusan: "AKL, MPLB, PM, DKV, TJKT, PPLG, TF",
+    siswa: 2128,
+    guru: 145,
+    website: "https://s.id/smkn1purwokerto",
+    eskul: "Badminton, Pramuka, Futsal, Basket, Paskibra, OSIS, PMR, Rohis, Tari, Jurnalistik, dll",
+    fasilitas: "Lab Keahlian, Masjid, Lapangan, Perpustakaan, Kantin, Gazebo",
+    kepsek: "Drs. Witoto",
+    kapro: "Ichsan Romdona, S.Pd",
+    wali: "Dwi Prastanti Fajriatun, S.Pd",
+    guruWali: "Seno Nugroho, S.Kom"
+};
+
+alert("SELAMAT DATANG " + nama + " di website " + data.sekolah);
+</script>
+</head>
+
+<body>
+<div class="bg-grid"></div>
+<div class="ambient-glow">
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+    <div class="glow glow-3"></div>
+</div>
+
+<div class="card">
+    <h1>School Profile</h1>
+
+    <div class="grid">
+        <div class="item"><div class="label">Nama Sekolah</div><div class="value"><script>document.write(data.sekolah)</script></div></div>
+        <div class="item"><div class="label">Alamat</div><div class="value"><script>document.write(data.alamat)</script></div></div>
+        <div class="item"><div class="label">Jurusan</div><div class="value"><script>document.write(data.jurusan)</script></div></div>
+        <div class="item"><div class="label">Jumlah Siswa</div><div class="value"><script>document.write(data.siswa)</script></div></div>
+        <div class="item"><div class="label">Jumlah Guru</div><div class="value"><script>document.write(data.guru)</script></div></div>
+        <div class="item"><div class="label">Website</div><div class="value"><a href="#" onclick="window.open(data.website)"><script>document.write(data.website)</script></a></div></div>
+        <div class="item"><div class="label">Ekstrakurikuler</div><div class="value"><script>document.write(data.eskul)</script></div></div>
+        <div class="item"><div class="label">Fasilitas</div><div class="value"><script>document.write(data.fasilitas)</script></div></div>
+        <div class="item"><div class="label">Kepala Sekolah</div><div class="value"><script>document.write(data.kepsek)</script></div></div>
+        <div class="item"><div class="label">Kapro</div><div class="value"><script>document.write(data.kapro)</script></div></div>
+        <div class="item"><div class="label">Wali Kelas</div><div class="value"><script>document.write(data.wali)</script></div></div>
+        <div class="item"><div class="label">Guru Wali</div><div class="value"><script>document.write(data.guruWali)</script></div></div>
+    </div>
+
+    <div style="text-align: center;">
+        <a href="Index.html" class="back-btn">← Kembali ke Index</a>
+    </div>
+
+    <footer>
+        ⚡ Web by Fatih Juni Aufaa Fikrii • 2026
+    </footer>
+</div>
+</body>
+</html>

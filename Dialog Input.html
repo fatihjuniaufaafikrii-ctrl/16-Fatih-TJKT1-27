@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIALOG INPUT - FATIH</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --ios-bg: #000000;
+            --ios-blue: #0A84FF;
+            --ios-indigo: #5E5CE6;
+            --ios-teal: #64D2FF;
+            --ios-red: #FF3B30;
+            --ios-green: #34C759;
+            --glass-bg: rgba(28, 28, 30, 0.5);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --text-main: #FFFFFF;
+            --text-muted: #8E8E93;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", sans-serif;
+            background-color: var(--ios-bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* =========================================
+           ANIMASI BACKGROUND: GRID & AURORA
+           ========================================= */
+        .bg-grid {
+            position: fixed;
+            inset: -50px;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -2;
+            animation: panGrid 20s linear infinite;
+        }
+
+        @keyframes panGrid {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-50px); }
+        }
+
+        .ambient-glow {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .glow {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.5;
+            mix-blend-mode: screen;
+        }
+
+        .glow-1 {
+            width: 50vw; height: 50vw;
+            background: rgba(10, 132, 255, 0.35);
+            top: -20%; left: -10%;
+            animation: drift 15s infinite alternate ease-in-out;
+        }
+
+        .glow-2 {
+            width: 40vw; height: 40vw;
+            background: rgba(94, 92, 230, 0.3);
+            bottom: -10%; right: -10%;
+            animation: drift 20s infinite alternate-reverse ease-in-out;
+        }
+
+        @keyframes drift { 
+            100% { transform: translate(10vw, 10vh) scale(1.1); } 
+        }
+
+        /* =========================================
+           WADAH UTAMA (GLASSMORPHISM)
+           ========================================= */
+        .box {
+            width: 90%;
+            max-width: 400px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(40px) saturate(200%);
+            -webkit-backdrop-filter: blur(40px) saturate(200%);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            padding: 40px 35px;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6), inset 0 2px 20px rgba(255,255,255,0.05);
+            position: relative;
+            z-index: 10;
+            
+            animation: cardEnter 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes cardEnter {
+            from { opacity: 0; transform: translateY(40px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 25px;
+            background: linear-gradient(135deg, #FFFFFF, var(--ios-blue));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* =========================================
+           SISTEM FORM & INPUT
+           ========================================= */
+        .info-panel {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 25px;
+            font-size: 13px;
+            text-align: center;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .info-panel b {
+            color: var(--text-main);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        input {
+            width: 100%;
+            padding: 16px 20px;
+            margin-bottom: 15px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            color: var(--text-main);
+            font-size: 15px;
+            font-family: inherit;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input::placeholder { color: #636366; }
+
+        input:focus {
+            border-color: var(--ios-blue);
+            background: rgba(0, 0, 0, 0.6);
+            box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.25);
+        }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            margin-top: 5px;
+            background: linear-gradient(135deg, var(--ios-blue), var(--ios-indigo));
+            color: #FFF;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 10px 20px rgba(10, 132, 255, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(10, 132, 255, 0.5);
+            filter: brightness(1.1);
+        }
+
+        button:active {
+            transform: scale(0.97);
+        }
+
+        /* Pesan Status */
+        .msg {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            min-height: 20px; /* Menjaga layout agar tidak loncat */
+        }
+
+        .error { color: var(--ios-red); }
+        
+        .receipt {
+            margin-top: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: var(--ios-teal);
+            line-height: 1.8;
+            text-align: left;
+        }
+
+        .receipt b.total {
+            display: block;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed rgba(255,255,255,0.2);
+            color: var(--ios-green);
+            font-size: 15px;
+        }
+
+        /* =========================================
+           TRANSISI ANTAR LAYAR (PROFESIONAL)
+           ========================================= */
+        .view-section {
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .fade-out {
+            opacity: 0;
+            transform: scale(0.95) translateY(-10px);
+            pointer-events: none;
+        }
+
+        .hidden { display: none !important; }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 12px;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+
+        /* Tombol Kembali */
+        .btn-kembali-floating {
+            position: fixed;
+            bottom: 30px;
+            background: rgba(28, 28, 30, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #FFFFFF;
+            padding: 14px 28px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: 0.3s;
+            z-index: 9999;
+        }
+
+        .btn-kembali-floating:hover {
+            background: #FFFFFF;
+            color: #000000;
+            transform: translateY(-5px) scale(1.05);
+        }
+    </style>
+</head>
+
+<body>
+    
+    <div class="bg-grid"></div>
+    <div class="ambient-glow">
+        <div class="glow glow-1"></div>
+        <div class="glow glow-2"></div>
+    </div>
+
+    <a href="index.html" class="btn-kembali-floating">← Kembali ke Index</a>
+
+    <div class="box">
+        
+        <div id="loginSection" class="view-section">
+            <h2>Sistem Otorisasi</h2>
+            
+            <div class="info-panel">
+                Protokol Akses Administrator<br>
+                User: <b>admin</b> | Pass: <b>12345</b>
+            </div>
+
+            <input type="text" id="username" placeholder="Identitas Pengguna" autocomplete="off">
+            <input type="password" id="password" placeholder="Kata Sandi Keamanan">
+            <button id="btnLogin">Otorisasi Akses</button>
+            <div id="loginMsg" class="msg error"></div>
+        </div>
+
+        <div id="paymentSection" class="view-section hidden fade-out">
+            <h2>Terminal Pembayaran</h2>
+            
+            <input type="number" id="tb" placeholder="Total Transaksi (IDR)">
+            <button id="btnProses">Proses Kalkulasi</button>
+            <div id="hasil" class="msg"></div>
+        </div>
+
+        <div class="footer">Sistem Keuangan Digital © 2026</div>
+    </div>
+
+    <script>
+        // 1. Inisialisasi Elemen DOM (Standar Industri)
+        document.addEventListener("DOMContentLoaded", () => {
+            const loginSection = document.getElementById("loginSection");
+            const paymentSection = document.getElementById("paymentSection");
+            
+            const btnLogin = document.getElementById("btnLogin");
+            const inputUser = document.getElementById("username");
+            const inputPass = document.getElementById("password");
+            const loginMsg = document.getElementById("loginMsg");
+
+            const btnProses = document.getElementById("btnProses");
+            const inputTb = document.getElementById("tb");
+            const hasilMsg = document.getElementById("hasil");
+
+            // Kredensial Sistem (Catatan: Di dunia nyata ini menggunakan database/API)
+            const USER_VALID = "admin";
+            const PASS_VALID = "12345";
+
+            // Format Mata Uang Otomatis (Rupiah)
+            const formatRupiah = new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            });
+
+            // 2. Event Listener Utama
+            btnLogin.addEventListener("click", prosesLogin);
+            btnProses.addEventListener("click", kalkulasiPembayaran);
+
+            // Fitur Profesional: Mendukung tombol 'Enter' untuk submit
+            inputPass.addEventListener("keypress", function(event) {
+                if (event.key === "Enter") prosesLogin();
+            });
+            inputTb.addEventListener("keypress", function(event) {
+                if (event.key === "Enter") kalkulasiPembayaran();
+            });
+
+            // 3. Logika Otorisasi Login
+            function prosesLogin() {
+                const user = inputUser.value.trim();
+                const pass = inputPass.value.trim();
+
+                if (user !== USER_VALID) {
+                    loginMsg.textContent = "Kredensial Pengguna tidak terdaftar.";
+                    inputUser.focus();
+                } else if (pass !== PASS_VALID) {
+                    loginMsg.textContent = "Kata sandi keamanan tidak valid.";
+                    inputPass.focus();
+                } else {
+                    loginMsg.textContent = "";
+                    transisiLayar(); // Panggil fungsi animasi
+                }
+            }
+
+            // 4. Animasi Transisi Halus antar Layar
+            function transisiLayar() {
+                // Beri efek pudar pada login
+                loginSection.classList.add("fade-out");
+                
+                // Tunggu 400ms (sesuai CSS) sebelum menukar display
+                setTimeout(() => {
+                    loginSection.classList.add("hidden");
+                    paymentSection.classList.remove("hidden");
+                    
+                    // Trigger reflow agar animasi fade-in berjalan
+                    void paymentSection.offsetWidth; 
+                    
+                    // Hilangkan efek pudar pada payment
+                    paymentSection.classList.remove("fade-out");
+                    inputTb.focus();
+                }, 400);
+            }
+
+            // 5. Logika Kalkulasi Diskon & Pembayaran
+            function kalkulasiPembayaran() {
+                const tb = parseInt(inputTb.value);
+                let diskon = 0;
+
+                if (isNaN(tb) || tb <= 0) {
+                    hasilMsg.innerHTML = `<span class="error">Parameter transaksi tidak valid.</span>`;
+                    return;
+                }
+
+                // Kalkulasi berdasarkan Tier
+                if (tb >= 1000000) diskon = 0.20 * tb;
+                else if (tb >= 850000) diskon = 0.15 * tb;
+                else if (tb >= 750000) diskon = 0.10 * tb;
+                else if (tb >= 500000) diskon = 0.05 * tb;
+
+                const totalAkhir = tb - diskon;
+
+                // Mencetak struk digital menggunakan Template Literal & Formatter
+                hasilMsg.innerHTML = `
+                    <div class="receipt">
+                        Status: AUTHORIZED<br>
+                        -------------------<br>
+                        Subtotal : ${formatRupiah.format(tb)}<br>
+                        Discount : -${formatRupiah.format(diskon)}<br>
+                        <b class="total">Payable  : ${formatRupiah.format(totalAkhir)}</b>
+                    </div>
+                `;
+            }
+        });
+    </script>
+
+</body>
+</html>

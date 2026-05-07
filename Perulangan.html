@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PERULANGAN - FATIH</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --ios-bg: #030508;
+            --ios-blue: #0A84FF;
+            --ios-teal: #64D2FF;
+            --ios-indigo: #5E5CE6;
+            --glass-bg: rgba(20, 20, 25, 0.5);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --text-main: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", sans-serif;
+            background-color: var(--ios-bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            padding: 20px;
+        }
+
+        /* =========================================
+           1. ANIMASI BACKGROUND: GRID & ORBS (LEBIH CEPAT)
+           ========================================= */
+        .bg-grid {
+            position: fixed;
+            inset: -50px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -2;
+            animation: panGrid 15s linear infinite; /* Animasi grid dipercepat */
+        }
+
+        @keyframes panGrid {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-50px); }
+        }
+
+        .ambient-glow {
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .glow {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.6;
+        }
+
+        .glow-1 {
+            width: 50vw; height: 50vw;
+            background: rgba(10, 132, 255, 0.5);
+            top: -10%; left: -10%;
+            animation: orbMove 15s infinite alternate ease-in-out;
+        }
+
+        .glow-2 {
+            width: 40vw; height: 40vw;
+            background: rgba(94, 92, 230, 0.4);
+            bottom: -10%; right: -10%;
+            animation: orbMove 18s infinite alternate-reverse ease-in-out;
+        }
+
+        @keyframes orbMove {
+            100% { transform: translate(15vw, 15vh) scale(1.2); }
+        }
+
+        /* =========================================
+           2. ANIMASI KARTU UTAMA (MENGAMBANG TERUS)
+           ========================================= */
+        .card {
+            width: 100%;
+            max-width: 450px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px) saturate(200%);
+            -webkit-backdrop-filter: blur(30px) saturate(200%);
+            border: 1px solid var(--glass-border);
+            border-radius: 36px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), inset 0 2px 10px rgba(255,255,255,0.1);
+            
+            /* Animasi masuk + Mengambang secara berkelanjutan */
+            animation: 
+                cardEnter 1s cubic-bezier(0.25, 1, 0.5, 1) forwards,
+                floating 6s ease-in-out infinite alternate;
+            animation-delay: 0s, 1s; /* Floating dimulai setelah masuk */
+        }
+
+        @keyframes cardEnter {
+            from { opacity: 0; transform: translateY(50px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-15px); } /* Gerakan naik-turun yang jelas */
+        }
+
+        /* =========================================
+           3. ANIMASI IKON & CINCIN (SPINNING)
+           ========================================= */
+        .icon-container {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 25px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .icon {
+            font-size: 35px;
+            z-index: 2;
+        }
+
+        .spinning-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px dashed var(--ios-teal);
+            border-top: 3px solid var(--ios-blue);
+            animation: spin 4s linear infinite; /* Berputar tanpa henti */
+            box-shadow: 0 0 20px rgba(100, 210, 255, 0.4);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* =========================================
+           4. ANIMASI TEKS GRADASI BERJALAN
+           ========================================= */
+        h1 {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #FFFFFF, var(--ios-teal), var(--ios-blue), #FFFFFF);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textGradient 6s linear infinite; /* Teks berwarna gerak */
+        }
+
+        @keyframes textGradient {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
+        }
+
+        p.subtitle {
+            font-size: 14px;
+            color: #A1A1AA;
+            margin-bottom: 25px;
+        }
+
+        /* =========================================
+           5. ANIMASI OUTPUT BOX (BERDENYUT)
+           ========================================= */
+        .output-box {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: left;
+            font-family: 'JetBrains Mono', monospace; /* Font gaya coding */
+            font-size: 14px;
+            color: #34d399; /* Warna hijau matrix */
+            line-height: 1.8;
+            border-left: 5px solid var(--ios-blue);
+            
+            /* Animasi denyut bayangan */
+            animation: pulseGlow 3s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 5px rgba(10, 132, 255, 0.2); }
+            100% { box-shadow: 0 0 25px rgba(10, 132, 255, 0.6); }
+        }
+
+        /* Mewarnai tag <b> yang di-generate JS */
+        .output-box b {
+            color: #FFFFFF;
+            background: var(--ios-blue);
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+
+        /* =========================================
+           6. TOMBOL KEMBALI
+           ========================================= */
+        .back-btn {
+            position: fixed;
+            bottom: 30px;
+            background: rgba(28, 28, 30, 0.8);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #FFFFFF;
+            padding: 14px 28px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: 0.3s;
+            z-index: 10;
+        }
+
+        .back-btn:hover {
+            background: #FFFFFF;
+            color: #000000;
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(255, 255, 255, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-grid"></div>
+    <div class="ambient-glow">
+        <div class="glow glow-1"></div>
+        <div class="glow glow-2"></div>
+    </div>
+
+    <a href="Index.html" class="back-btn">← Kembali ke Index</a>
+
+    <div class="card">
+        
+        <div class="icon-container">
+            <div class="spinning-ring"></div>
+            <div class="icon">💼</div>
+        </div>
+
+        <h1>Program Cek Tabungan</h1>
+        <p class="subtitle">System Processing Data...</p>
+
+        <div id="output" class="output-box"></div>
+
+        <script>
+            // 1. Variabel dan Prompt (Input)
+            let nama = prompt("Masukkan nama kamu:");
+            let target = prompt("Masukkan target jumlah tabungan (angka):");
+            let tabunganHarian = prompt("Berapa yang bisa kamu tabung per hari?");
+
+            // Konversi input ke angka menggunakan operator/fungsi
+            target = Number(target);
+            tabunganHarian = Number(tabunganHarian);
+
+            // 2. Fungsi Output ke HTML
+            const cetakHasil = (teks) => {
+                const wadah = document.getElementById("output");
+                wadah.innerHTML += teks + "<br>";
+            };
+
+            // 3. Operator dan Logika
+            let totalHari = target / tabunganHarian;
+
+            cetakHasil(`Halo, <b>${nama}</b>!`);
+
+            // 4. Percabangan (If-Else)
+            if (tabunganHarian <= 0) {
+                cetakHasil("Wah, tabungan harian harus lebih dari 0 supaya target tercapai.");
+            } else {
+                cetakHasil(`Untuk mencapai target Rp${target}, kamu butuh waktu ${totalHari} hari.`);
+                
+                // 5. Perulangan (For Loop)
+                // Menampilkan simulasi 5 hari pertama
+                cetakHasil("--- Simulasi 5 hari pertama ---");
+                for (let i = 1; i <= 5; i++) {
+                    let progres = i * tabunganHarian;
+                    cetakHasil(`Hari ke-${i}: Terkumpul Rp${progres}`);
+                }
+            }
+
+            // Output ke Console sebagai bonus
+            console.log("Program selesai dijalankan.");
+        </script>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PERCABANGAN IF - FATIH</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --ios-bg: #010103;
+            --ios-blue: #0A84FF;
+            --ios-purple: #BF5AF2;
+            --ios-teal: #64D2FF;
+            --glass-bg: rgba(20, 20, 25, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --text-primary: #FFFFFF;
+            --text-secondary: #EBEBF5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", sans-serif;
+            background-color: var(--ios-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            
+            /* KUNCI 3D: Memberikan jarak pandang kamera */
+            perspective: 1200px; 
+        }
+
+        /* =========================================
+           1. CYBER FLOOR (MEMBERIKAN KESAN RUANGAN 3D)
+           ========================================= */
+        .cyber-floor {
+            position: absolute;
+            bottom: -20%;
+            left: -50%;
+            width: 200%;
+            height: 80vh;
+            background-image: 
+                linear-gradient(rgba(10, 132, 255, 0.2) 2px, transparent 2px),
+                linear-gradient(90deg, rgba(191, 90, 242, 0.2) 2px, transparent 2px);
+            background-size: 60px 60px;
+            transform: rotateX(75deg); /* Membuat jaring tertidur jadi lantai */
+            animation: floorMove 10s linear infinite;
+            z-index: -2;
+            mask-image: linear-gradient(to top, rgba(0,0,0,1), transparent);
+            -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1), transparent);
+        }
+
+        @keyframes floorMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 60px; }
+        }
+
+        /* =========================================
+           2. AMBIENT GLOW (CAHAYA RUANGAN)
+           ========================================= */
+        .ambient-glow {
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .glow {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(140px);
+            opacity: 0.5;
+            mix-blend-mode: screen;
+        }
+
+        .glow-1 {
+            width: 60vw; height: 60vw;
+            background: rgba(10, 132, 255, 0.5);
+            top: -20%; left: -20%;
+            animation: moveOrb1 15s infinite alternate ease-in-out;
+        }
+
+        .glow-2 {
+            width: 50vw; height: 50vw;
+            background: rgba(191, 90, 242, 0.4);
+            bottom: -10%; right: -20%;
+            animation: moveOrb2 18s infinite alternate-reverse ease-in-out;
+        }
+
+        @keyframes moveOrb1 { 100% { transform: translate(10vw, 10vh) scale(1.2); } }
+        @keyframes moveOrb2 { 100% { transform: translate(-10vw, -10vh) scale(1.1); } }
+
+        /* =========================================
+           3. KARTU UTAMA (3D SLAB)
+           ========================================= */
+        .card {
+            width: 90%;
+            max-width: 480px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px) saturate(200%);
+            -webkit-backdrop-filter: blur(30px) saturate(200%);
+            border: 1px solid var(--glass-border);
+            border-radius: 40px;
+            padding: 60px 40px;
+            text-align: center;
+            
+            /* KUNCI 3D: Membiarkan anak elemen menembus sumbu Z */
+            transform-style: preserve-3d;
+            
+            /* Animasi Mengambang 3D */
+            animation: float3D 8s infinite alternate ease-in-out;
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.8), 
+                inset 0 2px 0 rgba(255, 255, 255, 0.3),
+                inset 0 0 40px rgba(10, 132, 255, 0.1);
+        }
+
+        @keyframes float3D {
+            0% { 
+                transform: translateY(15px) rotateX(8deg) rotateY(-8deg); 
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 2px 0 rgba(255, 255, 255, 0.3);
+            }
+            100% { 
+                transform: translateY(-15px) rotateX(-5deg) rotateY(10deg); 
+                box-shadow: 0 50px 80px rgba(0, 0, 0, 0.9), 0 20px 50px rgba(10, 132, 255, 0.3), inset 0 2px 0 rgba(255, 255, 255, 0.3);
+            }
+        }
+
+        /* =========================================
+           4. KONTEN 3D POP-OUT (TIDAK FLAT)
+           ========================================= */
+        .content-3d {
+            /* Membuat wadah teks ini maju 60px mendekati layar (keluar dari kaca) */
+            transform: translateZ(60px);
+            transform-style: preserve-3d;
+        }
+
+        /* Ikon Sistem untuk memperkuat visual */
+        .status-icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+            display: inline-block;
+            filter: drop-shadow(0 10px 15px rgba(10, 132, 255, 0.5));
+            transform: translateZ(20px);
+            animation: pulseIcon 2s infinite alternate;
+        }
+
+        @keyframes pulseIcon {
+            100% { transform: translateZ(40px) scale(1.1); }
+        }
+
+        .content-3d h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            line-height: 1.4;
+            
+            /* Teks Emas/Biru Terang */
+            background: linear-gradient(135deg, #FFFFFF, var(--ios-teal));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 15px 30px rgba(0,0,0,0.5);
+            transform: translateZ(30px); /* Teks Timbul */
+        }
+
+        .content-3d p {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            background: rgba(0,0,0,0.3);
+            padding: 15px 20px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+            display: inline-block;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            transform: translateZ(10px); /* Paragraf timbul sedikit */
+        }
+
+        /* =========================================
+           5. TOMBOL KEMBALI MENGAMBANG
+           ========================================= */
+        .back-btn {
+            position: fixed;
+            bottom: 40px;
+            background: rgba(28, 28, 30, 0.85);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #FFFFFF;
+            padding: 16px 32px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            z-index: 100;
+            transform-style: preserve-3d;
+        }
+
+        .back-btn:hover {
+            background: var(--text-primary);
+            color: var(--ios-bg);
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 20px 50px rgba(10, 132, 255, 0.4);
+        }
+
+        @media(max-width: 480px) {
+            .card { padding: 40px 25px; }
+            .content-3d h2 { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cyber-floor"></div>
+
+    <div class="ambient-glow">
+        <div class="glow glow-1"></div>
+        <div class="glow glow-2"></div>
+    </div>
+
+    <div class="card">
+        
+        <div class="content-3d">
+            <span class="status-icon">🛡️</span>
+
+            <script>
+                // LOGIKA JAVASCRIPT ASLI FATIH - TIDAK DIUBAH
+                var Nilai = prompt("Masukkan Nilai Anda", 0);
+
+                if(Nilai > 80){
+                    document.write("<h2>Selamat Anda Naik ke Level Berikutnya</h2>");
+                    document.write("<p>Anda Sangat Hebat Terus Berproses</p>");
+                }  
+              
+                else{
+                    document.write("<h2>Semangat dalam melaksanakan remidi</h2>");
+                
+                document.write("<p>Terima kasih sudah menggunakan aplikasi ini!</p>");
+                }
+            </script>
+        </div>
+
+    </div>
+
+    <a href="Index.html" class="back-btn">← Kembali ke Index</a>
+
+</body>
+</html>

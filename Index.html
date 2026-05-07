@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INDEX - FATIH</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-base: #010204;
+            --primary: #00F0FF; /* Cyan Neon */
+            --secondary: #7000FF; /* Deep Purple */
+            --accent: #FF00E6; /* Pink Neon */
+            --glass-card: rgba(20, 20, 25, 0.4);
+            --border-card: rgba(255, 255, 255, 0.08);
+            --text-main: #FFFFFF;
+            --text-dim: #9A9AA4;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            text-decoration: none;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* =========================================
+           0. CYBER BOOT LOADER (ANIMASI MASUK)
+           ========================================= */
+        #boot-screen {
+            position: fixed;
+            inset: 0;
+            background-color: #000000;
+            z-index: 999999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .loader-container {
+            width: 80%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .cyber-spinner {
+            width: 60px; height: 60px;
+            border: 3px solid rgba(0, 240, 255, 0.1);
+            border-top-color: var(--primary);
+            border-right-color: var(--secondary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 25px;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+        }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        #boot-text {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--primary);
+            font-size: 14px;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
+            height: 20px; 
+        }
+
+        .progress-wrapper {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: var(--primary);
+            box-shadow: 0 0 15px var(--primary);
+            animation: fillBar 2.5s cubic-bezier(0.8, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes fillBar {
+            0% { width: 0%; }
+            30% { width: 35%; }
+            50% { width: 35%; } 
+            70% { width: 80%; }
+            100% { width: 100%; }
+        }
+
+        .system-ready-hide {
+            opacity: 0;
+            transform: scale(1.1); 
+            pointer-events: none;
+        }
+
+        /* =========================================
+           1. ANIMASI BACKGROUND: NEBULA & DATA STREAM
+           ========================================= */
+        .cyber-bg {
+            position: fixed; inset: 0; z-index: -3;
+            background: radial-gradient(circle at 15% 50%, rgba(112, 0, 255, 0.1), transparent 50%), radial-gradient(circle at 85% 30%, rgba(0, 240, 255, 0.08), transparent 50%);
+            animation: nebulaDrift 30s infinite alternate ease-in-out;
+            opacity: 0; 
+            transition: opacity 2s ease;
+        }
+        
+        body.system-loaded .cyber-bg { opacity: 1; }
+
+        @keyframes nebulaDrift { 100% { transform: scale(1.1) translate(5vw, 5vh); } }
+
+        .data-grid {
+            position: fixed; inset: -50px; z-index: -2;
+            background-image: linear-gradient(to right, rgba(0, 240, 255, 0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(112, 0, 255, 0.03) 1px, transparent 1px);
+            background-size: 80px 80px; opacity: 0.5;
+            animation: gridMove 40s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
+            100% { transform: perspective(500px) rotateX(60deg) translateY(80px); }
+        }
+
+        body::after {
+            content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 9999; opacity: 0.4;
+            background: repeating-linear-gradient(to bottom,transparent 0px,transparent 2px,rgba(0, 0, 0, 0.1) 3px,rgba(0, 0, 0, 0.1) 4px);
+        }
+
+        /* =========================================
+           HEADER SECTION: HOLOGRAPHIC GLITCH
+           ========================================= */
+        header {
+            text-align: center; margin-bottom: 50px; position: relative;
+            opacity: 0; transform: translateY(-30px);
+        }
+
+        body.system-loaded header {
+            animation: headerIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation-delay: 0.3s; 
+        }
+
+        @keyframes headerIn { to { opacity: 1; transform: translateY(0); } }
+
+        .system-badge {
+            display: inline-flex; align-items: center; padding: 8px 20px;
+            background: rgba(0, 240, 255, 0.1); border: 1px solid rgba(0, 240, 255, 0.3);
+            border-radius: 50px; color: var(--primary); font-size: 11px; font-weight: 700;
+            letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 20px;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.2); font-family: 'Orbitron', sans-serif;
+        }
+
+        .system-badge::before {
+            content: ''; width: 8px; height: 8px; background-color: var(--primary);
+            border-radius: 50%; margin-right: 12px; animation: pulseShape 1.5s infinite;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif; font-size: clamp(36px, 6vw, 64px);
+            font-weight: 900; letter-spacing: 3px; text-transform: uppercase; color: #FFF;
+            position: relative; animation: glitch 1.5s infinite;
+        }
+
+        h1::before, h1::after { content: 'Materi Pemrograman'; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-base); }
+        h1::before { left: 2px; text-shadow: -2px 0 var(--accent); clip: rect(44px, 450px, 56px, 0); animation: glitch-anim 5s infinite linear alternate-reverse; }
+        h1::after { left: -2px; text-shadow: -2px 0 var(--primary); clip: rect(85px, 450px, 140px, 0); animation: glitch-anim2 5s infinite linear alternate-reverse; }
+
+        @keyframes glitch-anim { 0% { clip: rect(44px, 450px, 56px, 0); } 10% { clip: rect(100px, 450px, 120px, 0); } 20% { clip: rect(10px, 450px, 110px, 0); } 30% { clip: rect(56px, 450px, 80px, 0); } 40% { clip: rect(130px, 450px, 131px, 0); } 50% { clip: rect(44px, 450px, 56px, 0); } 100% { clip: rect(44px, 450px, 56px, 0); } }
+        @keyframes glitch-anim2 { 0% { clip: rect(85px, 450px, 140px, 0); } 10% { clip: rect(10px, 450px, 20px, 0); } 20% { clip: rect(100px, 450px, 130px, 0); } 30% { clip: rect(20px, 450px, 50px, 0); } 40% { clip: rect(60px, 450px, 120px, 0); } 50% { clip: rect(85px, 450px, 140px, 0); } 100% { clip: rect(85px, 450px, 140px, 0); } }
+
+        /* =========================================
+           BENTO GRID LAYOUT & 3D CARDS
+           ========================================= */
+        .bento-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px;
+            width: 100%; max-width: 1100px; margin: 0 auto; perspective: 1000px;
+        }
+
+        .card { 
+            background: var(--glass-card); backdrop-filter: blur(25px) saturate(200%); 
+            border: 1px solid var(--border-card); border-radius: 30px; padding: 40px 35px; 
+            position: relative; overflow: hidden; transition: all 0.5s cubic-bezier(0.25, 1, 0.3, 1); 
+            opacity: 0; transform: translateY(40px) rotateX(10deg); 
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), inset 0 2px 10px rgba(255, 255, 255, 0.03); 
+        }
+        
+        body.system-loaded .card { animation: cardPopUp 0.8s cubic-bezier(0.25, 1, 0.3, 1) forwards; }
+        body.system-loaded .card:nth-child(1) { grid-column: span 2; grid-row: span 2; animation-delay: 0.5s; }
+        body.system-loaded .card:nth-child(2) { grid-column: span 2; animation-delay: 0.6s; }
+        body.system-loaded .card:nth-child(3) { grid-column: span 1; animation-delay: 0.7s; }
+        body.system-loaded .card:nth-child(4) { grid-column: span 1; animation-delay: 0.8s; }
+        body.system-loaded .card:nth-child(5) { grid-column: span 2; animation-delay: 0.9s; }
+        body.system-loaded .card:nth-child(6) { grid-column: span 1; animation-delay: 1.0s; }
+        body.system-loaded .card:nth-child(7) { grid-column: span 1; animation-delay: 1.1s; }
+        body.system-loaded .card:nth-child(8) { grid-column: span 4; display: flex; align-items: center; justify-content: space-between; padding: 25px 50px; animation-delay: 1.2s; }
+
+        @keyframes cardPopUp { to { opacity: 1; transform: translateY(0) rotateX(0deg); } }
+
+        @media (max-width: 850px) { .bento-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; } body.system-loaded .card:nth-child(1), body.system-loaded .card:nth-child(2), body.system-loaded .card:nth-child(5), body.system-loaded .card:nth-child(8) { grid-column: span 2; } body.system-loaded .card:nth-child(3), body.system-loaded .card:nth-child(4), body.system-loaded .card:nth-child(6), body.system-loaded .card:nth-child(7) { grid-column: span 1; } }
+        @media (max-width: 500px) { .bento-grid { grid-template-columns: 1fr; } .card { grid-column: span 1 !important; grid-row: span 1 !important; flex-direction: column; text-align: center; padding: 30px; } .card-icon { margin-right: 0 !important; margin-bottom: 20px !important; } }
+
+        .card-icon { font-size: 38px; margin-bottom: 25px; display: inline-block; transition: 0.5s cubic-bezier(0.25, 1, 0.3, 1); filter: drop-shadow(0 0 10px rgba(255,255,255,0.3)); }
+        .card h3 { font-size: 22px; font-weight: 700; color: #FFF; margin-bottom: 12px; font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.5px; }
+        .card p { font-size: 13.5px; color: var(--text-dim); line-height: 1.6; font-weight: 400; font-family: 'JetBrains Mono', monospace; }
+
+        .spotlight { position: absolute; inset: 0; background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0, 240, 255, 0.1) 0%, transparent 80%); opacity: 0; transition: opacity 0.4s ease; pointer-events: none; z-index: 1; }
+        .card-content { position: relative; z-index: 2; }
+
+        .card:hover { transform: translateY(-12px) scale(1.03) rotateY(-3deg); border-color: var(--primary); box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 240, 255, 0.15), inset 0 0 20px rgba(0, 240, 255, 0.05); z-index: 10; }
+        .card:hover .spotlight { opacity: 1; }
+        .card:hover .card-icon { transform: scale(1.2) rotate(-8deg); filter: drop-shadow(0 0 15px var(--primary)); }
+        
+        .arrow { position: absolute; bottom: 40px; right: 35px; font-size: 26px; color: var(--primary); opacity: 0; transform: translateX(-15px); transition: all 0.5s cubic-bezier(0.25, 1, 0.3, 1); z-index: 3; }
+        .card:hover .arrow { opacity: 1; transform: translateX(0); }
+
+        .card:nth-child(8) h3 { margin-bottom: 0; }
+        .card:nth-child(8) .card-icon { margin-bottom: 0; margin-right: 30px; }
+        .card:nth-child(8) .card-content { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+        .card:nth-child(8) .text-wrapper { display: flex; align-items: center; }
+
+        /* =========================================
+           DEVELOPER ID CARD SECTION (UPDATED)
+           ========================================= */
+        .developer-panel {
+            width: 100%;
+            max-width: 1100px;
+            margin: 40px auto 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--glass-card);
+            backdrop-filter: blur(25px) saturate(200%);
+            border: 1px solid var(--border-card);
+            border-radius: 24px;
+            padding: 20px 35px;
+            
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        body.system-loaded .developer-panel {
+            animation: devPop 0.8s cubic-bezier(0.25, 1, 0.3, 1) forwards;
+            animation-delay: 1.4s; 
+        }
+
+        @keyframes devPop { to { opacity: 1; transform: translateY(0); } }
+
+        /* Container baru untuk menampung Foto dan Info Teks */
+        .dev-profile {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* Styling Foto Admin Cyber */
+        .admin-photo {
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+            filter: saturate(1.1);
+        }
+
+        .dev-info h4 {
+            color: var(--primary);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .dev-info p {
+            color: var(--text-main);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+
+        .dev-info p span { color: var(--accent); }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px; height: 45px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #FFF;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-btn svg {
+            width: 20px; height: 20px;
+            fill: currentColor;
+            z-index: 2;
+            transition: 0.3s;
+        }
+
+        .social-btn.ig:hover {
+            border-color: transparent;
+            background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+            box-shadow: 0 5px 20px rgba(214, 36, 159, 0.6);
+            transform: translateY(-5px) scale(1.1);
+        }
+
+        .social-btn.yt:hover {
+            border-color: transparent;
+            background: #FF0000;
+            box-shadow: 0 5px 20px rgba(255, 0, 0, 0.6);
+            transform: translateY(-5px) scale(1.1);
+        }
+
+        @media (max-width: 650px) {
+            .developer-panel { flex-direction: column; text-align: center; gap: 20px; padding: 25px; }
+            .dev-profile { flex-direction: column; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="boot-screen">
+        <div class="loader-container">
+            <div class="cyber-spinner"></div>
+            <div id="boot-text">> SYSTEM_INITIALIZATION_</div>
+            <div class="progress-wrapper">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cyber-bg"></div>
+    <div class="data-grid"></div>
+
+    <header>
+        <div class="system-badge">INDEX - FATIH ACTIVE</div>
+        <h1>Materi Pemrograman</h1>
+    </header>
+
+    <main class="bento-grid">
+        <a href="Output.html" target="konten" class="card">
+            <div class="spotlight"></div>
+            <div class="card-content">
+                <span class="card-icon">🖥️</span>
+                <h3>Fungsi Output</h3>
+                <p>> System.out.println("Cetak data");</p>
+            </div>
+            <span class="arrow">→</span>
+        </a>
+
+        <a href="Variabel.html" target="konten" class="card">
+            <div class="spotlight"></div>
+            <div class="card-content">
+                <span class="card-icon">📦</span>
+                <h3>Variabel</h3>
+                <p>> let wadahData = memori_dinamis;</p>
+            </div>
+            <span class="arrow">→</span>
+        </a>
+
+        <a href="Dialog Input.html" target="konten" class="card">
+            <div class="spotlight"></div>
+            <div class="card-content">
+                <span class="card-icon">💬</span>
+                <h3>Dialog Input</h3>
+                <p>> prompt_interaksi_user;</p>
+            </div>
+            <span class="arrow">→</span>
+        </a>
+
+        <a href="Operator.html" target="konten" class="card">
+            <div class="spotlight"></div>
+            <div class="card-content">
+                <span class="card-icon">🧮</span>
+                <h3>Operator</h3>
+                <p>> kalkulasi_logika;</p>
+            </div>
+            <span class="arrow">→</span>
+        </a>
+
+        <a href="if v1.html" target="konten" class="card">
+            <div class="spotlight"></div>
+            <div class="card-content">
+                <span class="card-icon">🛤️</span>
+                <h3>Percabangan (If)</h3>
+                <p>> if (kondisi) { keputusan; }</p>
+            </div>
+            <span class="arrow">→</span>
+        </a>
+
+        <a href="Array.html" target="konten" class="card">
+            <div class="spotlight"></div>
+            <div class="card-content">
+                <span class="card-icon">📚</span>
+                <h3>Array</h3>
+                <p>> let koleksi = [data];</p>
+            </div>
+            <span class="arrow">→</span>
+        </a>
+
+        <a href="Perulangan.html" target="konten" class="card">
+            <div class="spotlight"></div>
+            <div class="card-content">
+                <span class="card-icon">🔁</span>
+                <h3>Perulangan</h3>
+                <p>> for (i; c; ++) { loop; }</p>
+            </div>
+            <span class="arrow">→</span>
+        </a>
+
+        <a href="Fungsi.html" target="konten" class="card">
+            <div class="spotlight"></div>
+            <div class="card-content">
+                <div class="text-wrapper">
+                    <span class="card-icon">⚙️</span>
+                    <div>
+                        <h3>Fungsi JavaScript</h3>
+                        <p>> function modular() { tasks_spesifik; }</p>
+                    </div>
+                </div>
+                <span class="arrow" style="position: static; transform: none; opacity: 1;">→</span>
+            </div>
+        </a>
+    </main>
+
+    <section class="developer-panel">
+        <div class="dev-profile">
+            <img src="fatih.jpeg" alt="Fatih Juni Aufaa Fikrii" class="admin-photo">
+            
+            <div class="dev-info">
+                <h4>[ SYS_ADMIN ]</h4>
+                <p>> USER: <span>Fatih Juni Aufaa Fikrii</span><br>> CLASS: <span>XI TJKT 1</span> | BASE: <span>SMKN 1 Purwokerto</span></p>
+            </div>
+        </div>
+        
+        <div class="social-links">
+            <a href="https://www.instagram.com/smkn1purwokerto" target="_blank" class="social-btn ig" title="Instagram SMKN 1 Purwokerto">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+            </a>
+            <a href="https://www.youtube.com/c/SMKN1Purwokerto" target="_blank" class="social-btn yt" title="YouTube SMKN 1 Purwokerto">
+                <svg viewBox="0 0 24 24">
+                    <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+                </svg>
+            </a>
+        </div>
+    </section>
+
+    <script>
+        // 1. Logika Layar Loading (Boot Sequence)
+        window.addEventListener('DOMContentLoaded', () => {
+            const bootText = document.getElementById('boot-text');
+            const bootScreen = document.getElementById('boot-screen');
+            
+            const messages = [
+                "> INITIALIZING_SYSTEM_CORE_",
+                "> BYPASSING_SECURITY_FIREWALL_",
+                "> SELAMAT_DATANG_",
+                "> 16.FATIH JUNI AUFAA FIKRII."
+            ];
+            
+            let i = 0;
+            const textInterval = setInterval(() => {
+                i++;
+                if(i < messages.length) {
+                    bootText.innerText = messages[i];
+                } else {
+                    clearInterval(textInterval);
+                }
+            }, 600); 
+
+            setTimeout(() => {
+                bootScreen.classList.add('system-ready-hide');
+                document.body.classList.add('system-loaded');
+            }, 2800); 
+        });
+
+        // 2. Logika Efek Spotlight Mouse pada Kartu
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left; 
+                const y = e.clientY - rect.top;  
+                
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+    </script>
+
+</body>
+</html>

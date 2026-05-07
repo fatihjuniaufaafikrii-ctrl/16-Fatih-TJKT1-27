@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARRAY - FATIH | Spatial Terminal</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --ios-bg: #020203;
+            --ios-blue: #0A84FF;
+            --ios-teal: #64D2FF;
+            --ios-pink: #FF375F;
+            --glass-bg: rgba(15, 15, 18, 0.5);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #FFFFFF;
+            --text-secondary: #EBEBF5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", sans-serif;
+            background-color: var(--ios-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 50px 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* =========================================
+           1. ANIMASI BACKGROUND: RADAR & MESH
+           ========================================= */
+        .bg-grid {
+            position: fixed;
+            inset: -50px;
+            background-image: 
+                linear-gradient(to right, rgba(10, 132, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(10, 132, 255, 0.05) 1px, transparent 1px);
+            background-size: 60px 60px;
+            z-index: -2;
+            animation: panGrid 25s linear infinite;
+        }
+
+        @keyframes panGrid {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-60px); }
+        }
+
+        .ambient-glow {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .glow {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(130px);
+            opacity: 0.6;
+        }
+
+        .glow-1 {
+            width: 45vw; height: 45vw;
+            background: rgba(10, 132, 255, 0.45);
+            top: -10%; left: -20%;
+            animation: drift1 15s infinite alternate ease-in-out;
+        }
+
+        .glow-2 {
+            width: 50vw; height: 50vw;
+            background: rgba(255, 55, 95, 0.25);
+            bottom: -20%; right: -10%;
+            animation: drift2 20s infinite alternate-reverse ease-in-out;
+        }
+
+        @keyframes drift1 { 100% { transform: translate(15vw, 15vh) scale(1.2); } }
+        @keyframes drift2 { 100% { transform: translate(-15vw, -10vh) scale(1.1); } }
+
+        /* =========================================
+           2. WADAH KARTU HOLOGRAM
+           ========================================= */
+        .card-container {
+            width: 100%;
+            max-width: 650px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(50px) saturate(200%);
+            -webkit-backdrop-filter: blur(50px) saturate(200%);
+            border: 1px solid var(--glass-border);
+            border-radius: 40px;
+            padding: 50px 45px;
+            box-shadow: 0 50px 100px rgba(0, 0, 0, 0.8), inset 0 2px 20px rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden; 
+            
+            animation: 
+                cardEnter 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards,
+                magneticFloat 8s ease-in-out infinite alternate;
+        }
+
+        .card-container::after {
+            content: '';
+            position: absolute;
+            top: -100%; left: 0; right: 0;
+            height: 150px;
+            background: linear-gradient(to bottom, transparent, rgba(10, 132, 255, 0.1), transparent);
+            animation: scanline 6s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes scanline {
+            0% { top: -100%; }
+            100% { top: 200%; }
+        }
+
+        @keyframes cardEnter {
+            from { opacity: 0; transform: translateY(50px) scale(0.95) perspective(1000px) rotateX(10deg); }
+            to { opacity: 1; transform: translateY(0) scale(1) perspective(1000px) rotateX(0deg); }
+        }
+
+        @keyframes magneticFloat {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-12px); }
+        }
+
+        h2 {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 40px;
+            text-align: center;
+            background: linear-gradient(135deg, #FFFFFF, var(--ios-teal));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+        }
+
+        /* =========================================
+           3. TERMINAL WINDOW
+           ========================================= */
+        .box.terminal-window {
+            background: rgba(10, 10, 12, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            margin-bottom: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            
+            opacity: 0;
+            transform: translateX(-30px);
+            animation: terminalSlide 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Delay berurutan untuk ke-4 jendela */
+        .box.terminal-window:nth-child(1) { animation-delay: 0.3s; }
+        .box.terminal-window:nth-child(2) { animation-delay: 0.6s; }
+        .box.terminal-window:nth-child(3) { animation-delay: 0.9s; }
+        .box.terminal-window:nth-child(4) { animation-delay: 1.2s; }
+
+        @keyframes terminalSlide {
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .box.terminal-window:hover {
+            transform: scale(1.02) translateY(-5px);
+            border-color: rgba(10, 132, 255, 0.4);
+            box-shadow: 0 20px 40px rgba(10, 132, 255, 0.15);
+        }
+
+        .terminal-header {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 12px 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 18px 18px 0 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .window-controls { display: flex; gap: 8px; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot.red { background-color: #FF5F56; }
+        .dot.yellow { background-color: #FFBD2E; }
+        .dot.green { background-color: #27C93F; }
+
+        .terminal-title {
+            flex-grow: 1;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: #8E8E93;
+            margin-right: 44px;
+        }
+
+        .terminal-body { padding: 20px; }
+        .terminal-body strong {
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--ios-teal);
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        /* =========================================
+           4. VISUALISASI DATA ARRAY
+           ========================================= */
+        .array-container {
+            display: flex; flex-wrap: wrap; gap: 10px;
+        }
+
+        .array-item {
+            display: inline-block;
+            background: rgba(10, 132, 255, 0.1);
+            border: 1px solid rgba(10, 132, 255, 0.3);
+            color: #FFFFFF;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: 0.3s;
+            cursor: default;
+        }
+
+        .array-item:hover {
+            background: var(--ios-blue);
+            color: #FFF;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 5px 15px rgba(10, 132, 255, 0.4);
+            border-color: var(--ios-blue);
+        }
+
+        /* =========================================
+           5. TOMBOL KEMBALI
+           ========================================= */
+        .btn-kembali-floating {
+            position: fixed;
+            bottom: 30px;
+            background: rgba(28, 28, 30, 0.85);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #FFFFFF;
+            padding: 15px 30px;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 9999;
+            
+            opacity: 0;
+            animation: btnEnter 0.8s forwards;
+            animation-delay: 1.5s;
+        }
+
+        @keyframes btnEnter { to { opacity: 1; } }
+
+        .btn-kembali-floating:hover {
+            background: #FFFFFF;
+            color: #000000;
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(255, 255, 255, 0.4);
+        }
+
+        @media(max-width: 600px) {
+            .card-container { padding: 35px 25px; border-radius: 30px; }
+            h2 { font-size: 24px; }
+            .array-item { font-size: 12px; padding: 6px 12px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-grid"></div>
+    <div class="ambient-glow">
+        <div class="glow glow-1"></div>
+        <div class="glow glow-2"></div>
+    </div>
+
+    <a href="index.html" class="btn-kembali-floating">← Kembali ke Index</a>
+
+    <div class="card-container">
+        <h2>Manipulasi Array</h2>
+        
+        <!-- Semua jendela terminal akan dirender oleh JavaScript ke dalam div ini -->
+        <div id="output"></div>
+    </div>
+
+    <script>
+        const output = document.getElementById("output");
+
+        // FUNGSI INTI: Mencetak array dalam format Terminal Apple
+        function tampilkanArray(judul, array) {
+            let arrayTags = array.map(item => `<span class="array-item">"${item}"</span>`).join("");
+
+            output.innerHTML += `
+                <div class="box terminal-window">
+                    <div class="terminal-header">
+                        <div class="window-controls">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                        <div class="terminal-title">~/sys/array-data</div>
+                    </div>
+                    <div class="terminal-body">
+                        <strong>> ${judul}</strong>
+                        <div class="array-container">
+                            ${arrayTags}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ==========================================
+        // PROSES LOGIKA JAVASCRIPT ARRAY
+        // ==========================================
+
+        // 1. Membuat array nama sekolah
+        let namaSekolah = ["SD", "SMP", "SMK", "Universitas"];
+        tampilkanArray("Data Awal:", namaSekolah);
+
+        // 2. Ubah nama sekolah menjadi contoh baru
+        for (let i = 0; i < namaSekolah.length; i++) {
+            if (namaSekolah[i] === "SD") {
+                namaSekolah[i] = "SD Kemutug 2";
+            } else if (namaSekolah[i] === "SMP") {
+                namaSekolah[i] = "Al Azhar Mekkah";
+            } else if (namaSekolah[i] === "SMK") {
+                namaSekolah[i] = "Al Azhar Madinnah";
+            }
+        }
+        tampilkanArray("Setelah Diubah:", namaSekolah);
+
+        // 3. Ganti sebagian kata (Menggunakan indexOf)
+        for (let i = 0; i < namaSekolah.length; i++) {
+            if (namaSekolah[i].indexOf("SD") !== -1) {
+                namaSekolah[i] = "Sekolah Idaman";
+            } 
+            // Catatan Fatih: Saya mengubah 'Mesir' menjadi 'Mekkah' 
+            // agar sesuai dengan data array yang kamu ubah di atasnya
+            else if (namaSekolah[i].indexOf("Mekkah") !== -1) {
+                namaSekolah[i] = "Sekolah Nyaman";
+            }
+        }
+        tampilkanArray("Setelah Diganti Lagi:", namaSekolah);
+
+        // 4. Hapus data tertentu menggunakan Splice
+        for (let i = 0; i < namaSekolah.length; i++) {
+            if (namaSekolah[i] === "Sekolah Idaman" || namaSekolah[i] === "Universitas") {
+                namaSekolah.splice(i, 1);
+                i--; // Memundurkan index karena panjang array berkurang
+            }
+        }
+        tampilkanArray("Setelah Dihapus:", namaSekolah);
+
+    </script>
+
+</body>
+</html>

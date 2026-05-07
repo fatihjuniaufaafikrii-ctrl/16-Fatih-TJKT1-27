@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FUNGSI GEOMETRI - FATIH</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-base: #020204;
+            --ios-blue: #0A84FF;
+            --ios-teal: #30D158; /* Neon Green/Teal */
+            --ios-purple: #BF5AF2;
+            --ios-pink: #FF375F;
+            --glass-bg: rgba(20, 20, 25, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --text-main: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            cursor: url('https://cur.cursors-4u.net/cursors/cur-13/cur1160.cur'), auto;
+            perspective: 1200px; /* Jarak pandang kamera 3D */
+        }
+
+        /* =========================================
+           1. CYBER FLOOR & AMBIENT GLOW
+           ========================================= */
+        .cyber-floor {
+            position: absolute;
+            bottom: -30%;
+            left: -50%;
+            width: 200%;
+            height: 100vh;
+            background-image: 
+                linear-gradient(rgba(10, 132, 255, 0.15) 2px, transparent 2px),
+                linear-gradient(90deg, rgba(191, 90, 242, 0.15) 2px, transparent 2px);
+            background-size: 50px 50px;
+            transform: rotateX(75deg);
+            animation: floorMove 10s linear infinite;
+            z-index: -2;
+            mask-image: linear-gradient(to top, rgba(0,0,0,1), transparent 60%);
+            -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1), transparent 60%);
+        }
+
+        @keyframes floorMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 50px; }
+        }
+
+        .ambient-glow {
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .glow {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(130px);
+            opacity: 0.5;
+            mix-blend-mode: screen;
+        }
+
+        .glow-1 {
+            width: 60vw; height: 60vw;
+            background: rgba(10, 132, 255, 0.4);
+            top: -20%; left: -20%;
+            animation: drift 15s infinite alternate ease-in-out;
+        }
+
+        .glow-2 {
+            width: 50vw; height: 50vw;
+            background: rgba(191, 90, 242, 0.3);
+            bottom: -10%; right: -10%;
+            animation: drift 20s infinite alternate-reverse ease-in-out;
+        }
+
+        @keyframes drift { 
+            100% { transform: translate(10vw, 10vh) scale(1.2); } 
+        }
+
+        /* =========================================
+           2. KARTU UTAMA & MODAL (3D SPATIAL UI)
+           ========================================= */
+        /* Bungkus luar untuk menampung efek tilt/parallax dari JavaScript */
+        .tilt-wrapper {
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+            z-index: 10;
+        }
+
+        .container {
+            width: 90vw;
+            max-width: 420px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            padding: 50px 40px;
+            border-radius: 40px;
+            text-align: center;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7), inset 0 2px 20px rgba(255,255,255,0.08);
+            transform-style: preserve-3d;
+            animation: cardEnter 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes cardEnter {
+            from { opacity: 0; transform: translateY(50px) scale(0.9) rotateX(-10deg); }
+            to { opacity: 1; transform: translateY(0) scale(1) rotateX(0deg); }
+        }
+
+        /* Elemen di dalam kartu dibuat 'timbul' */
+        .container h2, .container .btn-menu {
+            transform: translateZ(40px); /* Timbul 40px ke arah depan */
+        }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 30px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #FFFFFF, var(--ios-blue));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+
+        .btn-menu {
+            width: 100%;
+            margin: 10px 0;
+            padding: 16px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-menu::after {
+            content: '⇲';
+            font-size: 18px;
+            color: var(--ios-blue);
+            opacity: 0.5;
+            transition: 0.3s;
+        }
+
+        .btn-menu:hover {
+            background: rgba(10, 132, 255, 0.2);
+            border-color: var(--ios-blue);
+            transform: translateZ(60px) scale(1.05); /* Melompat maju saat dihover */
+            box-shadow: 0 15px 30px rgba(10, 132, 255, 0.3), inset 0 2px 5px rgba(255,255,255,0.2);
+        }
+
+        .btn-menu:hover::after {
+            opacity: 1;
+            transform: scale(1.2);
+        }
+
+        /* =========================================
+           3. MODAL POPUP (SPATIAL OVERLAY)
+           ========================================= */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            perspective: 1000px;
+        }
+
+        .modal-content {
+            background: rgba(20, 20, 25, 0.85);
+            backdrop-filter: blur(50px) saturate(200%);
+            border: 1px solid var(--glass-border);
+            padding: 40px;
+            border-radius: 40px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 50px 100px rgba(0, 0, 0, 0.9), 0 0 50px rgba(10, 132, 255, 0.15);
+            transform-style: preserve-3d;
+            animation: modalPop 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalPop {
+            from { opacity: 0; transform: scale(0.8) rotateX(-20deg) translateZ(-100px); }
+            to { opacity: 1; transform: scale(1) rotateX(0deg) translateZ(0); }
+        }
+
+        /* Elemen dalam modal timbul */
+        .modal-content > * {
+            transform: translateZ(30px);
+        }
+
+        .modal h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-main);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #inputs input {
+            width: 100%;
+            padding: 16px 20px;
+            margin: 10px 0;
+            border-radius: 16px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+        }
+
+        #inputs input:focus {
+            border-color: var(--ios-blue);
+            background: rgba(0, 0, 0, 0.8);
+            box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.3), inset 0 2px 5px rgba(0,0,0,0.5);
+        }
+
+        .btn-action {
+            width: 100%;
+            padding: 16px;
+            border-radius: 16px;
+            border: none;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--ios-blue), var(--ios-purple));
+            color: #FFF;
+            box-shadow: 0 10px 20px rgba(10, 132, 255, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px) translateZ(40px);
+            box-shadow: 0 15px 30px rgba(10, 132, 255, 0.6);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-main);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        #result {
+            margin-top: 25px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 800;
+            font-size: 20px;
+            color: var(--ios-teal);
+            text-shadow: 0 0 20px rgba(48, 209, 88, 0.5);
+            background: rgba(0,0,0,0.4);
+            padding: 15px;
+            border-radius: 16px;
+            border: 1px dashed rgba(48, 209, 88, 0.3);
+        }
+
+        /* =========================================
+           4. UPGRADE HOLOGRAPHIC SHAPE 3D
+           ========================================= */
+        .shape {
+            margin: 10px auto 30px auto;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: translateZ(60px); /* Timbul ekstrim keluar layar */
+        }
+
+        /* Segitiga 3D Illusion */
+        .triangle {
+            width: 90px; height: 90px;
+            background: linear-gradient(135deg, var(--ios-teal), #0A84FF);
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            animation: floatShape 3s infinite alternate ease-in-out;
+            filter: drop-shadow(0 15px 20px rgba(10, 132, 255, 0.5));
+        }
+
+        /* Kerucut */
+        .cone {
+            width: 90px; height: 90px;
+            background: linear-gradient(180deg, var(--ios-pink), var(--ios-purple) 80%, #220044);
+            clip-path: polygon(50% 0%, 10% 100%, 90% 100%);
+            animation: floatShape 2.5s infinite alternate ease-in-out;
+            border-radius: 0 0 50% 50%; /* Ilusi alas kerucut melengkung */
+            box-shadow: inset -10px -10px 20px rgba(0,0,0,0.5);
+        }
+
+        /* Bola dengan pantulan cahaya realistis */
+        .sphere {
+            width: 90px; height: 90px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 25%, #FFFFFF 0%, var(--ios-blue) 40%, #001133 95%);
+            animation: floatSpin 5s linear infinite;
+            box-shadow: 0 20px 40px rgba(10, 132, 255, 0.5), inset -15px -15px 25px rgba(0,0,0,0.6);
+        }
+
+        /* Kubus Pseudo-3D menggunakan rotasi perspektif */
+        .cube {
+            width: 75px; height: 75px;
+            background: linear-gradient(135deg, var(--ios-teal), var(--ios-blue));
+            border-radius: 16px;
+            animation: rotateCube 4s infinite linear;
+            box-shadow: 
+                0 0 30px rgba(48, 209, 88, 0.4),
+                inset 5px 5px 15px rgba(255,255,255,0.4),
+                inset -5px -5px 15px rgba(0,0,0,0.4);
+        }
+
+        @keyframes floatShape { 100% { transform: translateZ(60px) translateY(-15px); } }
+        @keyframes floatSpin { 100% { transform: translateZ(60px) rotate(360deg); } }
+        @keyframes rotateCube { 100% { transform: translateZ(60px) perspective(300px) rotateX(360deg) rotateY(360deg); } }
+
+        /* =========================================
+           5. TOMBOL KEMBALI
+           ========================================= */
+        .btn-kembali-floating {
+            position: fixed;
+            bottom: 30px;
+            background: rgba(28, 28, 30, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #FFFFFF;
+            padding: 16px 32px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+            transition: 0.3s;
+            z-index: 9999;
+        }
+
+        .btn-kembali-floating:hover {
+            background: #FFFFFF;
+            color: #000000;
+            transform: translateY(-8px) scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cyber-floor"></div>
+    <div class="ambient-glow">
+        <div class="glow glow-1"></div>
+        <div class="glow glow-2"></div>
+    </div>
+
+    <a href="index.html" class="btn-kembali-floating">← Kembali ke Index</a>
+
+    <div class="tilt-wrapper" id="tiltMain">
+        <div class="container">
+            <h2>Geometry Engine</h2>
+            <button class="btn-menu" onclick="openModal('segitiga')">Luas Segitiga</button>
+            <button class="btn-menu" onclick="openModal('kerucut')">Volume Kerucut</button>
+            <button class="btn-menu" onclick="openModal('bola')">Luas Bola</button>
+            <button class="btn-menu" onclick="openModal('volumebola')">Volume Bola</button>
+            <button class="btn-menu" onclick="openModal('kubus')">Volume Kubus</button>
+        </div>
+    </div>
+
+    <div class="modal" id="modal">
+        <div class="tilt-wrapper" id="tiltModal">
+            <div class="modal-content">
+                <div id="shape"></div>
+                <h3 id="title"></h3>
+                <div id="inputs"></div>
+                <button class="btn-action btn-primary" onclick="hitung()">Kalkulasi Data</button>
+                <button class="btn-action btn-secondary" onclick="closeModal()">Tutup</button>
+                <p id="result"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. SCRIPT EFEK 3D PARALLAX MOUSE ---
+        document.addEventListener("mousemove", (e) => {
+            const x = (window.innerWidth / 2 - e.pageX) / 25;
+            const y = (window.innerHeight / 2 - e.pageY) / 25;
+            // Terapkan kemiringan ke Menu Utama
+            document.getElementById("tiltMain").style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+            // Terapkan kemiringan ke Modal (jika terbuka)
+            if (document.getElementById("modal").style.display === "flex") {
+                document.getElementById("tiltModal").style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+            }
+        });
+
+        // --- 2. SCRIPT LOGIKA GEOMETRI ASLI FATIH ---
+        let current = "";
+        const modal = document.getElementById("modal");
+        const title = document.getElementById("title");
+        const shape = document.getElementById("shape");
+        const inputs = document.getElementById("inputs");
+        const result = document.getElementById("result");
+
+        function openModal(type) {
+            current = type;
+            modal.style.display = "flex";
+            result.innerHTML = "";
+            shape.innerHTML = "";
+            inputs.innerHTML = "";
+
+            if (type === "segitiga") {
+                title.innerText = "Luas Segitiga";
+                shape.innerHTML = '<div class="shape triangle"></div>';
+                inputs.innerHTML = '<input id="alas" placeholder="Masukkan Alas" autocomplete="off"><input id="tinggi" placeholder="Masukkan Tinggi" autocomplete="off">';
+            }
+
+            if (type === "kerucut") {
+                title.innerText = "Volume Kerucut";
+                shape.innerHTML = '<div class="shape cone"></div>';
+                inputs.innerHTML = '<input id="jari" placeholder="Masukkan Jari-jari" autocomplete="off"><input id="tinggi" placeholder="Masukkan Tinggi" autocomplete="off">';
+            }
+
+            if (type === "bola") {
+                title.innerText = "Luas Bola";
+                shape.innerHTML = '<div class="shape sphere"></div>';
+                inputs.innerHTML = '<input id="jari" placeholder="Masukkan Jari-jari" autocomplete="off">';
+            }
+
+            if (type === "volumebola") {
+                title.innerText = "Volume Bola";
+                shape.innerHTML = '<div class="shape sphere"></div>';
+                inputs.innerHTML = '<input id="jari" placeholder="Masukkan Jari-jari" autocomplete="off">';
+            }
+
+            if (type === "kubus") {
+                title.innerText = "Volume Kubus";
+                shape.innerHTML = '<div class="shape cube"></div>';
+                inputs.innerHTML = '<input id="sisi" placeholder="Masukkan Panjang Sisi" autocomplete="off">';
+            }
+        }
+
+        /* 🔢 Animasi angka berjalan */
+        function animateValue(start, end, duration) {
+            let range = end - start;
+            let startTime = null;
+
+            function step(timestamp) {
+                if (!startTime) startTime = timestamp;
+                let progress = timestamp - startTime;
+                let value = start + range * (progress / duration);
+
+                result.innerHTML = "Hasil : " + value.toFixed(2);
+
+                if (progress < duration) {
+                    requestAnimationFrame(step);
+                } else {
+                    result.innerHTML = "Hasil : " + end.toFixed(2);
+                }
+            }
+            requestAnimationFrame(step);
+        }
+
+        /* ✅ LOGIKA PERHITUNGAN MATEMATIKA */
+        function hitung() {
+            let hasil = 0;
+
+            if (current === "segitiga") {
+                let alas = parseFloat(document.getElementById("alas").value);
+                let tinggi = parseFloat(document.getElementById("tinggi").value);
+                if (isNaN(alas) || isNaN(tinggi)) return result.innerHTML = "⚠️ Isi semua data!";
+                hasil = 0.5 * alas * tinggi;
+            }
+
+            if (current === "kerucut") {
+                let jari = parseFloat(document.getElementById("jari").value);
+                let tinggi = parseFloat(document.getElementById("tinggi").value);
+                if (isNaN(jari) || isNaN(tinggi)) return result.innerHTML = "⚠️ Isi semua data!";
+                hasil = (1/3) * Math.PI * jari * jari * tinggi;
+            }
+
+            if (current === "bola") {
+                let jari = parseFloat(document.getElementById("jari").value);
+                if (isNaN(jari)) return result.innerHTML = "⚠️ Isi input jari-jari!";
+                hasil = 4 * Math.PI * jari * jari;
+            }
+
+            if (current === "volumebola") {
+                let jari = parseFloat(document.getElementById("jari").value);
+                if (isNaN(jari)) return result.innerHTML = "⚠️ Isi input jari-jari!";
+                hasil = (4/3) * Math.PI * jari * jari * jari;
+            }
+
+            if (current === "kubus") {
+                let sisi = parseFloat(document.getElementById("sisi").value);
+                if (isNaN(sisi)) return result.innerHTML = "⚠️ Isi input sisi!";
+                hasil = sisi * sisi * sisi;
+            }
+
+            animateValue(0, hasil, 800);
+        }
+
+        function closeModal() {
+            modal.style.display = "none";
+            // Reset kemiringan modal saat ditutup
+            document.getElementById("tiltModal").style.transform = "rotateY(0deg) rotateX(0deg)";
+        }
+    </script>
+
+</body>
+</html>
